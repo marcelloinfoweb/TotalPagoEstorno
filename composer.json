@@ -1,0 +1,26 @@
+{
+    "name": "funarbe/module-totalpagoestorno",
+    "description": "Mostra Valor original da compra quando for cart\u00e3o de cr\u00e9dito",
+    "type": "magento2-module",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mage2Gen",
+            "email": "info@mage2gen.com"
+        },
+        {
+            "name": "Marcelo Caetano",
+            "email": "marcelo.caetano@funarbe.org.br"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Funarbe\\TotalPagoEstorno\\": ""
+        }
+    }
+}
