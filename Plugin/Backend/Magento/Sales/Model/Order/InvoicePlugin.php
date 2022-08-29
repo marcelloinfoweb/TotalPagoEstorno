@@ -36,10 +36,6 @@ class InvoicePlugin
         //$status = $statusHistoryItem->getStatusLabel();
         $comment = $statusHistoryItem->getComment();
 
-        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/total-pago-estorno.log');
-        $logger = new \Zend_Log();
-        $logger->addWriter($writer);
-
         try {
 
             if (strpos($comment, 'Authorized amount of') === true) {
@@ -53,6 +49,10 @@ class InvoicePlugin
             }
 
         } catch (\Exception $e) {
+            $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/total-pago-estorno.log');
+            $logger = new \Zend_Log();
+            $logger->addWriter($writer);
+
             $logger->warn("Estorno erro: " . $e);
         }
 
