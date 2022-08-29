@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Funarbe\TotalPagoEstorno\Plugin\Backend\Magento\Sales\Model\Order;
 
+use Laminas\Log\Logger;
+use Laminas\Log\Writer\Stream;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order\Invoice;
 
@@ -29,13 +31,18 @@ class InvoicePlugin
      */
     public function afterRegister(Invoice $subject, $result)
     {
-        try {
-            $order_id = $result->getOrderId();
-            $order = $this->orderRepository->get($order_id);
+        $order_id = $result->getOrderId();
+        $order = $this->orderRepository->get($order_id);
 
-            $statusHistoryItem = $order->getStatusHistoryCollection()->getLastItem();
-            //$status = $statusHistoryItem->getStatusLabel();
-            $comment = $statusHistoryItem->getComment();
+        $statusHistoryItem = $order->getStatusHistoryCollection()->getLastItem();
+        //$status = $statusHistoryItem->getStatusLabel();
+        $comment = $statusHistoryItem->getComment();
+
+        $writer = new Stream(BP . '/var/log/total-pago-estorno.log');
+        $logger = new Logger();
+        $logger->addWriter($writer);
+
+        try {
 
             if (strpos($comment, 'Authorized amount of') === true) {
 
@@ -44,13 +51,13 @@ class InvoicePlugin
 
                 $order->setSubtotal($valor);
                 $order->setBaseSubtotal($valor);
-
                 $order->save();
             }
 
         } catch (\Exception $e) {
-            var_dump("Estorno erro: " . $e);
+            $logger->warn("Estorno erro: " . $e);
         }
+
         return $result;
     }
 }
