@@ -7,8 +7,6 @@ declare(strict_types=1);
 
 namespace Funarbe\TotalPagoEstorno\Plugin\Backend\Magento\Sales\Model\Order;
 
-use Laminas\Log\Logger;
-use Laminas\Log\Writer\Stream;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order\Invoice;
 
@@ -38,8 +36,8 @@ class InvoicePlugin
         //$status = $statusHistoryItem->getStatusLabel();
         $comment = $statusHistoryItem->getComment();
 
-        $writer = new Stream(BP . '/var/log/total-pago-estorno.log');
-        $logger = new Logger();
+        $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/total-pago-estorno.log');
+        $logger = new \Zend_Log();
         $logger->addWriter($writer);
 
         try {
