@@ -31,31 +31,26 @@ class InvoicePlugin
     {
         $order_id = $result->getOrderId();
         $order = $this->orderRepository->get($order_id);
-
         $statusHistoryItem = $order->getStatusHistoryCollection()->getLastItem();
         //$status = $statusHistoryItem->getStatusLabel();
         $comment = $statusHistoryItem->getComment();
 
         try {
-
-            if (strpos($comment, 'Authorized amount of') === true) {
-
+            if (strpos($comment, 'Authorized amount of') !== false) {
                 preg_match_all('/R\$(.*?)\./', $comment, $matches);
                 $valor = str_replace(' ', '', $matches[1][0]);
-
                 $order->setSubtotal($valor);
                 $order->setBaseSubtotal($valor);
                 $order->save();
             }
-
         } catch (\Exception $e) {
             $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/total-pago-estorno.log');
             $logger = new \Zend_Log();
             $logger->addWriter($writer);
-
             $logger->warn("Estorno erro: " . $e);
         }
 
+        die('FIM');
         return $result;
     }
 }
