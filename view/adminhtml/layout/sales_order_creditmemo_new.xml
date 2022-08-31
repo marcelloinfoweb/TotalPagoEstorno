@@ -1,0 +1,16 @@
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="adjustments">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Funarbe_TotalPagoEstorno::adjustments.phtml</argument>
+            </action>
+        </referenceBlock>
+
+        <referenceBlock name="order_items">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Funarbe_TotalPagoEstorno::items.phtml</argument>
+            </action>
+        </referenceBlock>
+    </body>
+</page>

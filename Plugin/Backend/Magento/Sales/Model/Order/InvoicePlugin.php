@@ -37,6 +37,10 @@ class InvoicePlugin
 
         try {
             if (strpos($comment, 'Authorized amount of') !== false) {
+
+                $order->setBaseAdjustmentNegative($order->getBaseSubtotal());
+                $order->setAdjustmentNegative($order->getSubtotal());
+
                 preg_match_all('/R\$(.*?)\./', $comment, $matches);
                 $valor = str_replace(' ', '', $matches[1][0]);
                 $order->setSubtotal($valor);
@@ -50,7 +54,6 @@ class InvoicePlugin
             $logger->warn("Estorno erro: " . $e);
         }
 
-        die('FIM');
         return $result;
     }
 }

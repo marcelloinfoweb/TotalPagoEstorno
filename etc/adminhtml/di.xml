@@ -6,4 +6,7 @@
                 type="Funarbe\TotalPagoEstorno\Plugin\Backend\Magento\Sales\Model\Order\InvoicePlugin" sortOrder="10"
                 disabled="false"/>
     </type>
+
+    <preference for="Magento\Sales\Controller\Adminhtml\Order\Creditmemo\NewAction"
+                type="Funarbe\TotalPagoEstorno\Controller\Adminhtml\Order\Creditmemo\NewAction"/>
 </config>
