@@ -3,7 +3,7 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <type name="Magento\Sales\Model\Order\Invoice">
         <plugin name="Funarbe_TotalPagoEstorno_Plugin_Backend_Magento_Sales_Model_Order_Invoice"
-                type="Funarbe\TotalPagoEstorno\Plugin\Backend\Magento\Sales\Model\Order\InvoicePlugin" sortOrder="10"
+                type="Funarbe\TotalPagoEstorno\Plugin\Backend\Magento\Sales\Model\Order\InvoicePlugin" sortOrder="1"
                 disabled="false"/>
     </type>
 

@@ -23,9 +23,9 @@ class InvoicePlugin
     }
 
     /**
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws \Magento\Framework\Exception\InputException
-     * @throws \Exception
+     * @throws NoSuchEntityException
+     * @throws InputException
+     * @throws Exception
      */
     public function afterRegister(Invoice $subject, $result)
     {
@@ -35,25 +35,23 @@ class InvoicePlugin
         //$status = $statusHistoryItem->getStatusLabel();
         $comment = $statusHistoryItem->getComment();
 
-        try {
-            if (strpos($comment, 'Authorized amount of') !== false) {
+        if (!empty($comment) && strpos($comment, 'Authorized amount of') !== false) {
+            $resultFinal = [];
+            preg_match_all('/R\$(.*?)\./', $comment, $matches);
+            $price = str_replace(' ', '', $matches[1][0]);
+            $valor = (double)str_replace(',', '.', $price);
 
-                $order->setBaseAdjustmentNegative($order->getBaseSubtotal());
-                $order->setAdjustmentNegative($order->getSubtotal());
+            $resultFinal->setBaseAdjustmentNegative($order->getBaseSubtotal());
+            $resultFinal->setAdjustmentNegative($order->getSubtotal());
+            $resultFinal->setSubtotal($valor);
+            $resultFinal->setBaseSubtotal($valor);
 
-                preg_match_all('/R\$(.*?)\./', $comment, $matches);
-                $valor = str_replace(' ', '', $matches[1][0]);
-                $order->setSubtotal($valor);
-                $order->setBaseSubtotal($valor);
-                $order->save();
-            }
-        } catch (\Exception $e) {
-            $writer = new \Zend_Log_Writer_Stream(BP . '/var/log/total-pago-estorno.log');
-            $logger = new \Zend_Log();
-            $logger->addWriter($writer);
-            $logger->warn("Estorno erro: " . $e);
+            $order->setBaseAdjustmentNegative($order->getBaseSubtotal());
+            $order->setAdjustmentNegative($order->getSubtotal());
+            $order->setSubtotal($valor);
+            $order->setBaseSubtotal($valor);
+            $order->save();
         }
-
-        return $result;
+        return $resultFinal;
     }
 }
