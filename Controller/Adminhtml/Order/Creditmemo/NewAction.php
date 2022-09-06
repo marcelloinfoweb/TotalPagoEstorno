@@ -84,7 +84,7 @@ class NewAction extends \Magento\Backend\App\Action implements HttpGetActionInte
                     __("New Memo for #%1", $creditmemo->getInvoice()->getIncrementId())
                 );
             } else {
-                $resultPage->getConfig()->getTitle()->prepend(__("New Memo NOVO"));
+                $resultPage->getConfig()->getTitle()->prepend(__("New Memo"));
 
                 $block = $resultPage->getLayout()->getBlock('adjustments');
                 $block->setData('adjustment_custom', $this->getAdjustmentFeeCustom());
