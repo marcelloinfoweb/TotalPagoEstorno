@@ -12,5 +12,11 @@
                 <argument name="template" xsi:type="string">Funarbe_TotalPagoEstorno::items.phtml</argument>
             </action>
         </referenceBlock>
+
+        <referenceBlock name="creditmemo_totals">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Funarbe_TotalPagoEstorno::totals.phtml</argument>
+            </action>
+        </referenceBlock>
     </body>
 </page>
