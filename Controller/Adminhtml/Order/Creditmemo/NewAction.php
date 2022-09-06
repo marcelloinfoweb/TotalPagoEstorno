@@ -103,6 +103,23 @@ class NewAction extends \Magento\Backend\App\Action implements HttpGetActionInte
      */
     public function getAdjustmentFeeCustom(): ?float
     {
-        return $this->orderRepository->get($this->creditmemoLoader->getOrderId())->getBaseAdjustmentNegative();
+        $comment = $this->getCommentCustom();
+        $valor = 0.00;
+
+        if (!empty($comment) && strpos($comment, 'Authorized amount of') !== false) {
+            preg_match_all('/R\$(.*?)\./', $comment, $matches);
+            $price = str_replace(' ', '', $matches[1][0]);
+            $valor = (double)str_replace(',', '.', $price);
+        }
+
+        return $valor;
+    }
+
+    public function getCommentCustom()
+    {
+        $order_id = $this->creditmemoLoader->getOrderId();
+        $order = $this->orderRepository->get($order_id);
+        //$status = $statusHistoryItem->getStatusLabel();
+        return $order->getStatusHistoryCollection()->getLastItem()->getComment();
     }
 }

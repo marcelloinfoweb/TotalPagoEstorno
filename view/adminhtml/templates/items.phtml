@@ -82,7 +82,6 @@ $commentText = $block->getCreditmemo()->getCommentText();
         $orderTotalBar ?>
     </section>
 <?php endif; ?>
-
     <section class="admin__page-section">
         <input type="hidden" name="creditmemo[do_offline]" id="creditmemo_do_offline" value="0"/>
         <div class="admin__page-section-title">
@@ -218,9 +217,23 @@ function bindSendEmail() {
 window.bindSendEmail = bindSendEmail;
 window.checkButtonsRelation = checkButtonsRelation;
 
-    jQuery(document).ready(function(){
-         setTimeout(function(){
-            jQuery('.action-default[disabled], .action-default.disabled, button[disabled], button.disabled').trigger('click');
+    jQuery(document).ready(function($) {
+        setTimeout(function() {
+            $('.action-default[disabled], .action-default.disabled, button[disabled], button.disabled').trigger('click');
+
+            setTimeout(function() {
+                const grandTotalValue = $('.refund-grand-totals span.price');
+                const result = grandTotalValue.text();
+                debugger
+                if (result.indexOf("-") > -1) {
+                    const novoValor = grandTotalValue.text().replace(/-/, "");
+                    grandTotalValue.html(novoValor);
+                    grandTotalValue.prepend('<strong>Passar para o cliente: </strong>').css('color', 'red');
+                } else {
+                    grandTotalValue.prepend('<strong>Receber do cliente: </strong>').css('color', 'green');
+                }
+            }, 1000);
+
         }, 2000);
     });
 
