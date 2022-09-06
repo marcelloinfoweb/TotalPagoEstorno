@@ -224,13 +224,12 @@ window.checkButtonsRelation = checkButtonsRelation;
             setTimeout(function() {
                 const grandTotalValue = $('.refund-grand-totals span.price');
                 const result = grandTotalValue.text();
-                debugger
                 if (result.indexOf("-") > -1) {
                     const novoValor = grandTotalValue.text().replace(/-/, "");
                     grandTotalValue.html(novoValor);
-                    grandTotalValue.prepend('<strong>Passar para o cliente: </strong>').css('color', 'red');
+                    grandTotalValue.prepend('<strong>Passar para o cliente: </strong>').css('color', 'darkred');
                 } else {
-                    grandTotalValue.prepend('<strong>Receber do cliente: </strong>').css('color', 'green');
+                    grandTotalValue.prepend('<strong>Receber do cliente: </strong>').css('color', 'darkgreen');
                 }
             }, 1000);
 
