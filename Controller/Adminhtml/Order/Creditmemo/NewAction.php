@@ -112,14 +112,38 @@ class NewAction extends \Magento\Backend\App\Action implements HttpGetActionInte
             $valor = (double)str_replace(',', '.', $price);
         }
 
+        // TODO: Pegar a diferença dos dois valores com a taxa, somar com a taxa, o resultado subtrair com diferença dos dois valors com a taxa, o resultado subtrair a taxa, o resultado somar com o valor enviado para a Cielo
+        $subtotal = $this->getSubtotalCustom();
+        $taxa = $this->getTaxCustom();
+        $subtotalTaxa = $subtotal + $taxa;
+        $diferenca = $subtotalTaxa - $valor;
+
+        $diferencaMaisTaxa = $diferenca + $taxa;
+        $diferencaMenosTax = $taxa - $diferenca;
+
+        $valor += ($diferencaMaisTaxa - $diferencaMenosTax) - $taxa;
+
         return $valor;
     }
 
-    public function getCommentCustom()
+    public function getCommentCustom(): string
     {
         $order_id = $this->creditmemoLoader->getOrderId();
         $order = $this->orderRepository->get($order_id);
         //$status = $statusHistoryItem->getStatusLabel();
         return $order->getStatusHistoryCollection()->getLastItem()->getComment();
     }
+
+    public function getSubtotalCustom(): ?float
+    {
+        $order_id = $this->creditmemoLoader->getOrderId();
+        return $this->orderRepository->get($order_id)->getSubtotal();
+    }
+
+    public function getTaxCustom(): ?float
+    {
+        $order_id = $this->creditmemoLoader->getOrderId();
+        return $this->orderRepository->get($order_id)->getTaxAmount();
+    }
+
 }
