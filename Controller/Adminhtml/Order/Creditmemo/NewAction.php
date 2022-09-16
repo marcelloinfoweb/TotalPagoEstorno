@@ -102,7 +102,6 @@ class NewAction extends \Magento\Backend\App\Action implements HttpGetActionInte
     {
         $AmountAuthorized = $this->getAmountAuthorizedCustom();
 
-
         $valor = $AmountAuthorized ?? 0.00;
 
         // TODO: Pegar a diferença dos dois valores com a taxa, somar com a taxa, o resultado subtrair com diferença dos dois valors com a taxa, o resultado subtrair a taxa, o resultado somar com o valor enviado para a Cielo
@@ -114,13 +113,17 @@ class NewAction extends \Magento\Backend\App\Action implements HttpGetActionInte
             return $valor;
         }
 
+        if ($frete === 15.0) {
+            $valor -= $frete;
+        }
+
         $subtotalTaxa = $subtotal + $taxa;
         $diferenca = $subtotalTaxa - $valor;
 
         $diferencaMaisTaxa = $diferenca + $taxa;
         $diferencaMenosTax = $taxa - $diferenca;
 
-        $valor += ($diferencaMaisTaxa - $diferencaMenosTax) - $taxa;
+        $valor += (($diferencaMaisTaxa - $diferencaMenosTax) - $taxa) + $frete;
 
         return $valor;
     }
