@@ -98,23 +98,22 @@ class NewAction extends \Magento\Backend\App\Action implements HttpGetActionInte
         return $resultForward;
     }
 
-    /**
-     * @return float|null
-     */
     public function getAdjustmentFeeCustom(): ?float
     {
-        $comment = $this->getCommentCustom();
-        $valor = 0.00;
+        $AmountAuthorized = $this->getAmountAuthorizedCustom();
 
-        if (!empty($comment) && strpos($comment, 'Authorized amount of') !== false) {
-            preg_match_all('/R\$(.*?)\./', $comment, $matches);
-            $price = str_replace(' ', '', $matches[1][0]);
-            $valor = (double)str_replace(',', '.', $price);
-        }
+
+        $valor = $AmountAuthorized ?? 0.00;
 
         // TODO: Pegar a diferença dos dois valores com a taxa, somar com a taxa, o resultado subtrair com diferença dos dois valors com a taxa, o resultado subtrair a taxa, o resultado somar com o valor enviado para a Cielo
         $subtotal = $this->getSubtotalCustom();
         $taxa = $this->getTaxCustom();
+        $frete = $this->getShippingAmountCustom();
+
+        if ($taxa === 0.0) {
+            return $valor;
+        }
+
         $subtotalTaxa = $subtotal + $taxa;
         $diferenca = $subtotalTaxa - $valor;
 
@@ -126,12 +125,11 @@ class NewAction extends \Magento\Backend\App\Action implements HttpGetActionInte
         return $valor;
     }
 
-    public function getCommentCustom(): string
+    public function getAmountAuthorizedCustom(): ?float
     {
         $order_id = $this->creditmemoLoader->getOrderId();
         $order = $this->orderRepository->get($order_id);
-        //$status = $statusHistoryItem->getStatusLabel();
-        return $order->getStatusHistoryCollection()->getLastItem()->getComment();
+        return $order->getPayment()->getAmountAuthorized();
     }
 
     public function getSubtotalCustom(): ?float
@@ -144,6 +142,12 @@ class NewAction extends \Magento\Backend\App\Action implements HttpGetActionInte
     {
         $order_id = $this->creditmemoLoader->getOrderId();
         return $this->orderRepository->get($order_id)->getTaxAmount();
+    }
+
+    public function getShippingAmountCustom(): ?float
+    {
+        $order_id = $this->creditmemoLoader->getOrderId();
+        return $this->orderRepository->get($order_id)->getShippingAmount();
     }
 
 }
